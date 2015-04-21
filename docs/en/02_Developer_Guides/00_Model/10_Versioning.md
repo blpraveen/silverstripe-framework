@@ -77,7 +77,7 @@ The record is retrieved as a `DataObject`, but saving back modifications via `wr
 rather than modifying the existing one.
 </div>
 
-In order to get a list of all versions for a specific record, we need to generate specialized `[api:Versioned_Version]` 
+In order to get a list of all versions for a specific record, we need to generate specialized `\[api:Versioned_Version\]` 
 objects, which expose the same database information as a `DataObject`, but also include information about when and how 
 a record was published.
 	
@@ -90,9 +90,9 @@ a record was published.
 
 The usual call to `DataObject->write()` will write to whatever stage is currently active, as defined by the 
 `Versioned::current_stage()` global setting. Each call will automatically create a new version in the 
-`<class>_versions` table. To avoid this, use `[writeWithoutVersion()](api:Versioned->writeWithoutVersion())` instead.
+`<class>_versions` table. To avoid this, use `\[writeWithoutVersion()\]\(api:Versioned->writeWithoutVersion()\)` instead.
 
-To move a saved version from one stage to another, call `[writeToStage(<stage>)](api:Versioned->writeToStage())` on the 
+To move a saved version from one stage to another, call `\[writeToStage(<stage>)\]\(api:Versioned->writeToStage()\)` on the 
 object. The process of moving a version to a different stage is also called "publishing", so we've created a shortcut 
 for this: `publish(<from-stage>, <to-stage>)`.
 
