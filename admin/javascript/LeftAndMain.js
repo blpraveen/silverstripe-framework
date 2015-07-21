@@ -296,9 +296,9 @@ jQuery.noConflict();
 			/**
 			 * Preview External Window.
 			 */
-			dualwindowMode: function() {
+			windowMode: function() {
 				this.updateLayoutOptions({
-					mode: 'dualwindow'
+					mode: 'window'
 				});
 			},
 			
