@@ -293,6 +293,15 @@ jQuery.noConflict();
 				});
 			},
 
+			/**
+			 * Preview External Window.
+			 */
+			dualwindowMode: function() {
+				this.updateLayoutOptions({
+					mode: 'dualwindow'
+				});
+			},
+			
 			RedrawSuppression: false,
 
 			redraw: function() {
