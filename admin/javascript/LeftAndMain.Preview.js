@@ -35,6 +35,19 @@
 			 * Flags whether the preview is available on this CMS section.
 			 */
 			IsPreviewEnabled: false,
+			/**
+			 *Flags whether the preview external is available on this CMS section.
+			 */			
+			IsPreviewExEnabled: false,			
+/**
+			 *  preview window opened.
+			 */			
+			PreviewWindow : null,
+
+			/**
+			 *  preview window style.
+			 */
+			PreviewWindowStyle : "location=yes,height=800,width=1024,scrollbars=yes,status=yes",
 
 			/**
 			 * Mode in which the preview will be enabled.
@@ -111,6 +124,28 @@
 					container.entwine('.ss').previewMode();
 					this.setIsPreviewEnabled(true);
 					this._loadCurrentState();
+				} else if(modeName = 'dualwindow') {
+					container.entwine('.ss').previewExMode();	
+					var previewUrl = container.find('.cms-edit-form .preview').attr('href');
+				 	var d = new Date(),m = d.getTime();
+				 	this.loadPagePreviewWindow();
+					if(this.getPreviewWindow() && this.getPreviewWindow().location != null ) {
+							this.getPreviewWindow().location.href  = previewUrl;
+					} else {
+						this.setPreviewWindow( window.open(previewUrl, m, this.getPreviewWindowStyle()));
+						if (typeof this.getPreviewWindow().attachEvent != "undefined") {
+						    this.getPreviewWindow().attachEvent("onunload",  this.previewWindowClose());
+						} else if (typeof this.getPreviewWindow().addEventListener != "undefined") {
+						    this.getPreviewWindow().addEventListener("unload",  this.previewWindowClose(), false);
+						}						
+						if(typeof(Storage) !== "undefined") {
+							   sessionStorage.previewWindow = m;
+						} else {
+						    console.log('No Sesssion Storage');
+						}
+					}										
+					this.setIsPreviewExEnabled(true);
+					this._loadCurrentState();
 				} else {
 					throw 'Invalid mode: ' + modeName;
 				}
@@ -120,6 +155,13 @@
 				this.redraw();
 
 				return this;
+			},
+			/**
+			 * On Preview Window Close
+			 */			
+			previewWindowClose:function() {
+				this.setPreviewWindow(null);
+			 	sessionStorage.removeItem('previewWindow');
 			},
 
 			/**
@@ -164,6 +206,11 @@
 				if (layoutOptions) {
 					// There are two mode selectors that we need to keep in sync. Redraw both.
 					$('.preview-mode-selector').changeVisibleMode(layoutOptions.mode);
+					
+					if(layoutOptions.mode == 'dualwindow') {
+						this.loadPreviewWindow();
+					}
+					
 				}
 
 				// Update preview size selector.
@@ -318,6 +365,9 @@
 					// retained for this page from the last visit
 					if(mode) this.changeMode(mode);
 					if(size) this.changeSize(size);
+					if(mode == 'dualwindow') {
+						this.loadPagePreviewWindow();
+					}					
 				}
 				return this;
 			},
@@ -361,7 +411,30 @@
 				this.find('iframe').addClass('loading').attr('src', url);
 				return this;
 			},
-
+			
+			/**
+			 * load Preview window from the session.
+			 */			
+			loadPagePreviewWindow:function() {
+				if(sessionStorage.previewWindow && sessionStorage.previewWindow != null ) {
+					this.setPreviewWindow( window.open('', sessionStorage.previewWindow) );
+				}
+			},
+			/**
+			 * Update preview extneral whenever any panels are reloaded.
+			 */
+			loadPreviewWindow:function() {
+				var preWin = this.getPreviewWindow();
+				var container = $('.cms-container');
+				 try {
+					if(preWin) {
+						  var previewUrl = container.find('.cms-edit-form .preview').attr('href');
+						  preWin.location.href  = previewUrl;
+					}
+				} catch(e) {
+				 	console.log('preview window error');
+				}
+			},
 			/**
 			 * Fetch available states from the current SilverStripeNavigator (SilverStripeNavigatorItems).
 			 * Navigator is supplied by the backend and contains all state options for the current object.
