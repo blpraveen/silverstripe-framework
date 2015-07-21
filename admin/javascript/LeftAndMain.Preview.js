@@ -124,7 +124,7 @@
 					container.entwine('.ss').previewMode();
 					this.setIsPreviewEnabled(true);
 					this._loadCurrentState();
-				} else if(modeName = 'dualwindow') {
+				} else if(modeName = 'window') {
 					container.entwine('.ss').previewExMode();	
 					var previewUrl = container.find('.cms-edit-form .preview').attr('href');
 				 	var d = new Date(),m = d.getTime();
@@ -207,7 +207,7 @@
 					// There are two mode selectors that we need to keep in sync. Redraw both.
 					$('.preview-mode-selector').changeVisibleMode(layoutOptions.mode);
 					
-					if(layoutOptions.mode == 'dualwindow') {
+					if(layoutOptions.mode == 'window') {
 						this.loadPreviewWindow();
 					}
 					
@@ -365,7 +365,7 @@
 					// retained for this page from the last visit
 					if(mode) this.changeMode(mode);
 					if(size) this.changeSize(size);
-					if(mode == 'dualwindow') {
+					if(mode == 'window') {
 						this.loadPagePreviewWindow();
 					}					
 				}
